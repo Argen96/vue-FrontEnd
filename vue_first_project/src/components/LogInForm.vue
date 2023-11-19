@@ -42,7 +42,7 @@ export default {
         password: this.password,
       };
 
-      axios.post("http://localhost:8000/login/", data)
+      axios.post("http://localhost:8000/login/", data, { withCredentials: true }) // Include 'withCredentials' for cross-origin cookie handling
         .then((response) => {
           console.log(response.data);
         })
@@ -53,6 +53,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .login-form-container {
