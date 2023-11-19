@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import SignUpForm from './components/SignUpForm.vue'
 import LogInForm from './components/LogInForm.vue'
+import HomePage from './components/HomePage.vue'
 import App from './App.vue'
 
 const routes = [
@@ -14,6 +15,11 @@ const routes = [
     path: '/login',
     name: 'LogInForm',
     component:LogInForm,
+  },
+  {
+    path: '/homepage',
+    name: 'HomePage',
+    component:HomePage,
   }
 ]
 

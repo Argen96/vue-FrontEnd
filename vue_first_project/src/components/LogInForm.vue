@@ -1,38 +1,43 @@
-<!-- src/components/LogInForm.vue -->
 <template>
   <div>
     <AppNavbar />
-     <div class="login-form-container">
-    <form @submit.prevent="login" class="login-form">
-      <label for="email">Email:</label>
-      <input v-model="email" id="email" required />
-      <label for="password">Password:</label>
-      <input v-model="password" id="password" type="password" required />
+    <div class="login-form-container">
+      <form @submit.prevent="login" class="login-form">
+        <label for="email">Email:</label>
+        <input v-model="email" id="email" required />
+        <label for="password">Password:</label>
+        <input v-model="password" id="password" type="password" required />
 
-      <div class="button-container">
-        <button type="submit">Login</button>
+        <div class="button-container">
+          <button type="submit">Login</button>
+          <div class="errorMessage">{{ errorMessage }}</div>
+        </div>
+      </form>
+      <div class="signup-message">
+        <p>Don't have an account?</p>
+        <router-link to="/">Sign Up</router-link>
       </div>
-    </form>
-  </div>
+    </div>
     <AppFooter />
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import AppNavbar from './AppNavbar.vue'
-import AppFooter from './AppFooter.vue'
+import axios from 'axios';
+import AppNavbar from './AppNavbar.vue';
+import AppFooter from './AppFooter.vue';
 
 export default {
-  name: "LogInForm",
+  name: 'LogInForm',
   components: {
     AppNavbar,
     AppFooter,
   },
   data() {
     return {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
+      errorMessage: '',
     };
   },
   methods: {
@@ -42,20 +47,50 @@ export default {
         password: this.password,
       };
 
-      axios.post("http://localhost:8000/login/", data, { withCredentials: true }) // Include 'withCredentials' for cross-origin cookie handling
+      axios.post('http://localhost:8000/login/', data, { withCredentials: true })
         .then((response) => {
-          console.log(response.data);
+          if (response.data.status === 'success') {
+            this.errorMessage = '';
+            localStorage.setItem('token', response.data.token);
+            this.$router.push({ name: 'HomePage' });
+          } else {
+            this.errorMessage = response.data.message;
+          }
         })
         .catch((error) => {
-          console.error(error);
+          this.errorMessage = error.response && error.response.data
+            ? error.response.data.message
+            : error.message;
+          console.error(this.errorMessage);
         });
     },
   },
 };
 </script>
 
-
 <style scoped>
+/* Existing styles... */
+
+.signup-message {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.signup-message p {
+  margin-bottom: 10px;
+}
+
+.signup-message router-link {
+  color: #4caf50;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.errorMessage {
+  color: red;
+  margin-top: 10px;
+}
+
 .login-form-container {
   max-width: 400px;
   margin: 16vh auto; /* Add top margin in viewport height units */
@@ -77,6 +112,7 @@ export default {
   margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  color: #4caf50;
 }
 
 .button-container {

@@ -1,23 +1,31 @@
-<!-- src/components/SignupForm.vue -->
 <template>
- <div>
- <AppNavbar />
-  <div class="signup-form-container">
-    <form @submit.prevent="signup" class="signup-form">
-      <label for="username">Username:</label>
-      <input v-model="username" id="username" required />
-      <label for="email">Email:</label>
-      <input v-model="email" id="email" type="email" required />
-      <label for="password">Password:</label>
-      <input v-model="password" id="password" type="password" required />
-       <div class="button-container">
-        <button type="submit">Sign Up</button>
-         <div class = "errorMessage"> {{error }}  </div>
+  <div>
+    <AppNavbar />
+    <div class="signup-form-container">
+      <form @submit.prevent="signup" class="signup-form">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input v-model="username" id="username" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input v-model="email" id="email" type="email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input v-model="password" id="password" type="password" required />
+        </div>
+        <div class="button-container">
+          <button type="submit">Sign Up</button>
+        </div>
+      </form>
+      <div class="errorMessage">{{ error }}</div>
+      <div class="login-message">
+        <p>Already have an account? <router-link to="/login" class="login-link">Log In</router-link></p>
       </div>
-    </form>
+    </div>
+    <AppFooter />
   </div>
-   <AppFooter />
-</div>
 </template>
 
 <script>
@@ -27,7 +35,7 @@ import AppFooter from './AppFooter.vue'
 
 export default {
   name: "SignUpForm",
-   components: {
+  components: {
     AppNavbar,
     AppFooter,
   },
@@ -51,9 +59,9 @@ export default {
         .then((response) => {
           console.log(response.data);
           if (response.data.status === "success") {
-            this.error = null
+            this.error = null;
             alert("Sign Up successful!");
-           this.$router.push({ name: "LogInForm" });
+            this.$router.push({ name: "LogInForm" });
           } else {
             this.error = "Sign up failed. Please try again.";
           }
@@ -71,22 +79,51 @@ export default {
 };
 </script>
 
-
 <style scoped>
-.signup-form-container {
+.login-message {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-message p {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
+}
+
+.login-link {
+  margin-left: 5px;
+  color: #4caf50;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.errorMessage {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.signup-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: 70vh;
+  margin-top: 10vh; /* Adjust the top margin as needed */
 }
 
 .signup-form {
   max-width: 400px;
-  width: 90%;
+  width: 100%;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 16px;
 }
 
 label {
@@ -97,7 +134,8 @@ label {
 input {
   width: 100%;
   padding: 8px;
-  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .button-container {
@@ -117,10 +155,4 @@ button {
 button:hover {
   background-color: #45a049;
 }
-
-.errorMessage{
-  color: red;
-  margin-top:10px
-}
-
 </style>
