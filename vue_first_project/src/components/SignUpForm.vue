@@ -1,5 +1,7 @@
 <!-- src/components/SignupForm.vue -->
 <template>
+ <div>
+ <AppNavbar />
   <div class="signup-form-container">
     <form @submit.prevent="signup" class="signup-form">
       <label for="username">Username:</label>
@@ -8,20 +10,27 @@
       <input v-model="email" id="email" type="email" required />
       <label for="password">Password:</label>
       <input v-model="password" id="password" type="password" required />
-
-      <div class="button-container">
+       <div class="button-container">
         <button type="submit">Sign Up</button>
          <div class = "errorMessage"> {{error }}  </div>
       </div>
     </form>
   </div>
+   <AppFooter />
+</div>
 </template>
 
 <script>
 import axios from "axios";
+import AppNavbar from './AppNavbar.vue'
+import AppFooter from './AppFooter.vue'
 
 export default {
   name: "SignUpForm",
+   components: {
+    AppNavbar,
+    AppFooter,
+  },
   data() {
     return {
       username: "",
@@ -44,9 +53,9 @@ export default {
           if (response.data.status === "success") {
             this.error = null
             alert("Sign Up successful!");
-            this.$router.push("/login");
+           this.$router.push({ name: "LogInForm" });
           } else {
-            this.error = "Sign Up failed. Please try again.";
+            this.error = "Sign up failed. Please try again.";
           }
         })
         .catch((error) => {
@@ -113,4 +122,5 @@ button:hover {
   color: red;
   margin-top:10px
 }
+
 </style>
