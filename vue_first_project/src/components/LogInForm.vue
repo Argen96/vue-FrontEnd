@@ -51,7 +51,8 @@ export default {
         .then((response) => {
           if (response.data.status === 'success') {
             this.errorMessage = '';
-            localStorage.setItem('token', response.data.token);
+             console.log(response)
+            localStorage.setItem('token', response.data.data.token);
             this.$router.push({ name: 'HomePage' });
           } else {
             this.errorMessage = response.data.message;
@@ -112,7 +113,6 @@ export default {
   margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  color: #4caf50;
 }
 
 .button-container {
