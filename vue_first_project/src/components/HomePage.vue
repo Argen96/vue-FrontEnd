@@ -1,3 +1,4 @@
+<!-- HomePage.vue -->
 <template>
   <div>
     <AppAccountNavBar />
@@ -10,7 +11,8 @@
             <p class="post-text">{{ post.content }}</p>
           </div>
           <div class="post-buttons">
-         <router-link to="/edit-post"><button class="edit-button">Edit</button></router-link> 
+            <!-- Pass post.id to the editPost method -->
+            <button class="edit-button" @click="editPost(post.id)">Edit</button>
             <button class="delete-button" @click="deletePost(post.id)">Delete</button>
           </div>
         </li>
@@ -31,29 +33,27 @@ import axios from "axios";
 export default {
   name: "HomePage",
   components: {
-   AppAccountNavBar,
+    AppAccountNavBar,
     AppFooter,
   },
   data() {
     return {
       posts: [],
-      accessToken: null, // Add accessToken as a data property
+      accessToken: null,
     };
   },
   mounted() {
-    // Fetch posts when the component is mounted
     this.fetchPosts();
   },
   methods: {
     fetchPosts() {
-      // Retrieve the access token from localStorage
       this.accessToken = localStorage.getItem("token");
 
       if (!this.accessToken) {
-         this.$router.push({ name: 'LogInForm' });
+        this.$router.push({ name: 'LogInForm' });
+        return;
       }
 
-      // Make an API request to fetch posts
       axios.get("http://localhost:8000/posts/", {
         headers: {
           Authorization: `Bearer ${this.accessToken}`,
@@ -67,75 +67,84 @@ export default {
         });
     },
     deletePost(postId) {
-      // Make an API request to delete the post
-      axios.delete(`http://localhost:8000/posts/${postId}/`, {
+      axios.delete(`http://localhost:8000/post/${postId}/`, {
         headers: {
           Authorization: `Bearer ${this.accessToken}`,
         },
       })
       .then(() => {
-        // Remove the deleted post from the local posts array
         this.posts = this.posts.filter(post => post.id !== postId);
-        console.log(`Post with ID ${postId} deleted successfully`);
       })
       .catch((error) => {
         console.error(error);
       });
     },
+    editPost(postId) {
+      localStorage.setItem('editPostId', postId);
+      this.$router.push({ name: 'EditPostForm' });
+    },
   },
 };
 </script>
 
+
 <style scoped>
+/* Container for the list of posts */
 .post-list-container {
   max-width: 800px;
   margin: auto;
   margin-bottom: 40px;
 }
 
+/* Style for the list of posts */
 .post-list {
   list-style-type: none;
   padding: 0;
 }
 
+/* Style for each individual post item */
 .post-item {
   margin-bottom: 20px;
   padding: 10px;
   border: 1px solid grey;
   border-radius: 5px;
   display: flex;
-  flex-direction: column; /* Change to column layout */
+  justify-content: space-between;
+  align-items: center;
 }
 
+/* Content section of each post item */
 .post-content {
   flex-grow: 1;
-  overflow: hidden; /* Hide overflow content */
+  overflow: hidden;
 }
 
+/* Title of the post */
 .post-title {
   margin: 0;
   font-size: 1.5em;
-  color: #333; /* Dark gray color for a more professional look */
-  font-family: 'Arial', sans-serif; /* Change font family to Arial for a more standard look */
+  color: #333;
+  font-family: 'Arial', sans-serif;
 }
 
+/* Text content of the post */
 .post-text {
   margin-top: 10px;
   font-size: 1.2em;
   color: #555;
-  white-space: normal; /* Allow text to wrap */
-  border-bottom: 1px solid #ccc; /* Add border below content */
+  white-space: normal;
+  border-bottom: 1px solid #ccc;
 }
 
+/* Buttons section for each post */
 .post-buttons {
   display: flex;
-  margin-top: 10px; /* Add margin between content and buttons */
 }
 
+/* Edit and delete buttons */
 .edit-button,
 .delete-button {
   padding: 8px 16px;
-  margin-right:6vh; /* Add gap between edit and delete buttons */
   font-size: 1em;
   font-weight: bold;
   text-decoration: none;
@@ -143,44 +152,51 @@ export default {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin-left: 10px;
   transition: background-color 0.3s, transform 0.2s ease-in-out;
 }
 
+/* Edit button style */
 .edit-button {
-  background-color: #007bff; /* Blue color */
-  margin-left:40vh
+  background-color: #007bff;
 }
 
+/* Delete button style */
 .delete-button {
-  background-color: #ff0000; /* Red color */
+  background-color: #ff0000;
 }
 
+/* Hover effect for buttons */
 .edit-button:hover,
 .delete-button:hover {
   transform: scale(1.05);
 }
 
+/* Container for the "Create Post" link */
 .create-post-container {
   text-align: center;
   margin-top: 20px;
 }
 
+/* Style for the "Create Post" link */
 .create-post-container a {
   padding: 15px 30px;
   font-size: 1.2em;
   font-weight: bold;
   text-decoration: none;
   color: #fff;
-  background-color: #4caf50; /* Green color */
+  background-color: #4caf50;
   border-radius: 8px;
   transition: background-color 0.3s, transform 0.2s ease-in-out;
 }
 
+/* Hover effect for the "Create Post" link */
 .create-post-container a:hover {
-  background-color: #45a049; /* Darker green on hover */
+  background-color: #45a049;
   transform: scale(1.05);
 }
 </style>
+
 
 
 
