@@ -9,9 +9,9 @@
           <div class="post-content">
             <h3 class="post-title">{{ post.title }}</h3>
             <p class="post-text">{{ post.content }}</p>
+            <p class="post-date">Created on: {{ formatDate(post.created_at) }}</p>
           </div>
           <div class="post-buttons">
-            <!-- Pass post.id to the editPost method -->
             <button class="edit-button" @click="editPost(post.id)">Edit</button>
             <button class="delete-button" @click="deletePost(post.id)">Delete</button>
           </div>
@@ -24,6 +24,7 @@
     <AppFooter />
   </div>
 </template>
+
 
 <script>
 import AppAccountNavBar from './AppAccountNavBar.vue';
@@ -66,6 +67,13 @@ export default {
           console.error(error);
         });
     },
+ 
+
+  formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+},
+
     deletePost(postId) {
       axios.delete(`http://localhost:8000/post/${postId}/`, {
         headers: {
