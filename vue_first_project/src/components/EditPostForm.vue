@@ -56,7 +56,6 @@ export default {
         if (response.data && response.data.title && response.data.content) {
           this.error = null;
           alert("Post edited successfully!");
-          this.$router.push({ name: 'HomePage' });
         } else {
           this.error = "Failed to edit post. Please try again.";
         }
